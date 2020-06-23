@@ -81,3 +81,50 @@ Obstacle.prototype.update = function(time) {
    }
 
 };
+Player = function () {
+
+   Sprite.call(this);
+   this.name = 'player';
+   this.color = '#0000ff';
+   this.size = {
+       width: 50,
+       height: 50
+   };
+   this.speed = {
+       x: 0,
+       y: 0
+   };
+   this.position.x = game.width / 2;
+   this.position.y = game.height - 60;
+
+};
+
+Player.prototype = Object.create(Sprite.prototype);
+Player.prototype.constructor = Player;
+
+Player.prototype.update = function(time) {
+
+   if (!Sprite.prototype.update.call(this, time)) {
+       return false;
+   }
+
+   if (this.speed.x < -10) {
+       this.speed.x = -10;
+   }
+   else if (this.speed.x > 10) {
+       this.speed.x = 10;
+   }
+
+   this.position.x += this.speed.x;
+   if (this.position.x < 0) {
+       this.position.x = 0;
+   }
+   else if (this.position.x > (game.width-this.size.width)) {
+       this.position.x = (game.width-this.size.width);
+   }
+
+   this.speed.x *= .95;
+
+   game.score++;
+
+};
