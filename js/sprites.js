@@ -23,6 +23,15 @@ Sprite.prototype = {
        if (this.visible == false) {
            return false;
        }
+      if (this.collisionList.length > 0) {
+   for (var i = 0; i < GameObjects.length; i++) {
+       if (this.collisionList.indexOf(GameObjects[i].name) > -1 &&
+           this.checkCollision(GameObjects[i])) {
+           this.collide(GameObjects[i]);
+       }
+   }
+}
+return true;
        return true;
    },
 
@@ -46,7 +55,20 @@ Sprite.prototype = {
        GameObjects.splice(indexOf, 1);
 
    }
+// ...
+collide: function (target) {
 
+},
+
+checkCollision: function(target) {
+   if (this.position.x < target.position.x + target.size.width &&
+       this.position.x + this.size.width > target.position.x &&
+       this.position.y < target.position.y + target.size.height &&
+       this.size.height + this.position.y > target.position.y) {
+       return true;
+   }
+   return false;
+}
 };
 
 /**
@@ -89,6 +111,7 @@ Player = function () {
    this.size = {
        width: 50,
        height: 50
+      this.collisionList = ['obstacle'];
    };
    this.speed = {
        x: 0,
@@ -126,5 +149,11 @@ Player.prototype.update = function(time) {
    this.speed.x *= .95;
 
    game.score++;
+
+};
+Player.prototype.collide = function(target) {
+
+   Sprite.prototype.collide.call(this, target);
+   game.score = 0;
 
 };
