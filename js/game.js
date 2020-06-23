@@ -13,17 +13,23 @@ var game = {
    ctx;
 window.onload = init;
 window.onresize = resizeGame;
+ctx.clearRect(0, 0, game.width, game.height);
+function render(time) {
+
+   requestAnimFrame(render);
+   for (var i = 0; i < GameObjects.length; i++) {
+       GameObjects[i].update(time);
+       GameObjects[i].draw();
+   }
+}
 
 function init() {
    elCanvas = document.getElementById('game');
    ctx = elCanvas.getContext('2d');
    resizeGame();
-
-   // Draw the player
-   ctx.beginPath();
-   ctx.rect(game.width/2, game.height-60, 50, 50);
-   ctx.fillStyle = "red";
-   ctx.fill();
+   var obstacle = new Obstacle();
+obstacle.add();
+   requestAnimFrame(render);
 }
 
 /**
