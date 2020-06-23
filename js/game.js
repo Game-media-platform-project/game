@@ -10,7 +10,7 @@ var game = {
        width: window.innerWidth,
        height: window.innerWidth
    },
-    player = {},
+    players = {},
    elCanvas,
    ctx;
 window.onload = init;
@@ -34,15 +34,10 @@ function init() {
    resizeGame();
    var obstacle = new Obstacle();
 obstacle.add();
-   player = new Player();
-player.add();
-window.addEventListener('keydown', function(e) {
-   if (e.key == 'a' || e.key == 'ArrowLeft') {
-       player.speed.x -= 1;
-   }
-   else if (e.key == 'd' || e.key == 'ArrowRight') {
-       player.speed.x += 1;
-   }
+   COUCHFRIENDS.settings.apiKey = '<your couchfriends.com api key>';
+COUCHFRIENDS.settings.host = 'ws.couchfriends.com';
+COUCHFRIENDS.settings.port = '80';
+COUCHFRIENDS.connect();
 });
    requestAnimFrame(render);
 }
@@ -56,3 +51,36 @@ function resizeGame() {
    elCanvas.width = game.width;
    elCanvas.height = game.height;
 }
+COUCHFRIENDS.on('connect', function() {
+   var jsonData = {
+       topic: 'game',
+       action: 'host',
+       data: {
+           sessionKey: ''
+       }
+      COUCHFRIENDS.on('playerJoined', function(data) {
+   var player = new Player();
+   player.clientId = data.id;
+   player.add();
+   players.push(player);
+});
+
+COUCHFRIENDS.on('playerLeft', function(data) {
+   for (var i = 0; i < players.length; i++) {
+       if (players[i].clientId == data.id) {
+           players[i].remove();
+           players.splice(i,1);
+       }
+   }
+});
+   COUCHFRIENDS.on('playerOrientation', function(data) {
+   for (var i = 0; i < players.length; i++) {
+       if (players[i].clientId == data.id) {
+           players[i].speed.x = data.x * 8.5;
+           return;
+       }
+   }
+});
+   };
+   COUCHFRIENDS.send(jsonData);
+});
