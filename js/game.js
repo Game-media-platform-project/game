@@ -22,6 +22,9 @@ function render(time) {
    for (var i = 0; i < GameObjects.length; i++) {
        GameObjects[i].update(time);
        GameObjects[i].draw();
+      ctx.fillStyle = "#000000";
+ctx.font = "bold 32px Arial";
+ctx.fillText(game.score, 10, 32);
    }
 }
 
