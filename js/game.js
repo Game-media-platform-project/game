@@ -6,9 +6,11 @@ function( callback ){
 };
 
 var game = {
+       score: 0,
        width: window.innerWidth,
        height: window.innerWidth
    },
+    player = {},
    elCanvas,
    ctx;
 window.onload = init;
@@ -29,6 +31,16 @@ function init() {
    resizeGame();
    var obstacle = new Obstacle();
 obstacle.add();
+   player = new Player();
+player.add();
+window.addEventListener('keydown', function(e) {
+   if (e.key == 'a' || e.key == 'ArrowLeft') {
+       player.speed.x -= 1;
+   }
+   else if (e.key == 'd' || e.key == 'ArrowRight') {
+       player.speed.x += 1;
+   }
+});
    requestAnimFrame(render);
 }
 
